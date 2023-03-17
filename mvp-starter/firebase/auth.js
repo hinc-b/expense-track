@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { onAuthStateChanged } from 'firebase/auth';
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { auth } from './firebase'
 
 const AuthUserContext = createContext({
@@ -59,3 +59,4 @@ export function AuthUserProvider({ children }) {
     return <AuthUserContext.Provider value={auth}>{children}</AuthUserContext.Provider>;
 }
 
+export const useAuth = () => useContext(AuthUserContext);
