@@ -14,3 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDNiLRKDCT-fyq4l3fYnV9O7j4rLKVRMGs",
+  authDomain: "expense-track-2137.firebaseapp.com",
+  projectId: "expense-track-2137",
+  storageBucket: "expense-track-2137.appspot.com",
+  messagingSenderId: "612647407779",
+  appId: "1:612647407779:web:dbd1da0dd1489f491bef16",
+  measurementId: "G-PXPTRCQTY8"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
