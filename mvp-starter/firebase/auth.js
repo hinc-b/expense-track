@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { onAuthStateChanged } from 'firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react'
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase'
 
 const AuthUserContext = createContext({
@@ -34,19 +34,17 @@ export default function useFirebaseAuth() {
             setIsLoading(false);
             return;
         }
-
         setAuthUser({
             uid: user.uid,
             email: user.email
         });
-
         setIsLoading(false);
     };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, authStateChanged);
         return () => unsubscribe();
-    }, []);
+    }, []); 
 
     return {
         authUser,
