@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { createContext, useContext, useEffect, useState } from 'react'
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut as authSignOut } from 'firebase/auth';
 import { auth } from './firebase'
 
 const AuthUserContext = createContext({
@@ -27,11 +27,15 @@ export default function useFirebaseAuth() {
     const [authUser, setAuthUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const clear = () => {
+        setAuthUser(null);
+        setIsLoading(false);
+    }
+
     const authStateChanged = async (user) => {
         setIsLoading(true);
         if (!user) {
-            setAuthUser(null);
-            setIsLoading(false);
+            clear();
             return;
         }
         setAuthUser({
@@ -41,6 +45,8 @@ export default function useFirebaseAuth() {
         setIsLoading(false);
     };
 
+    const signOut = () => authSignOut(auth).then(clear);
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, authStateChanged);
         return () => unsubscribe();
@@ -48,7 +54,8 @@ export default function useFirebaseAuth() {
 
     return {
         authUser,
-        isLoading
+        isLoading,
+        signOut
     }
 }
 
