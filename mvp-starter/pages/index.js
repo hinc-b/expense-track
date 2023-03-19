@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-
+import { useState } from 'react';
 import Head from 'next/head';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { Button, Container, Typography } from '@mui/material';
+import { Button, Container, Typography, Dialog } from '@mui/material';
 import styles from '../styles/landing.module.scss';
 import { EmailAuthProvider, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../firebase/firebase';
 
 const REDIRECT_PAGE = '/dashboard';
 
