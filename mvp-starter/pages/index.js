@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { Button, Container, Typography, Dialog } from '@mui/material';
+import { Button, Container, Typography, Dialog, CircularProgress } from '@mui/material';
 import styles from '../styles/landing.module.scss';
 import { EmailAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
+import { useAuth } from '../firebase/auth';
 
 const REDIRECT_PAGE = '/dashboard';
 
@@ -36,9 +38,20 @@ const uiConfig = {
 }
 
 export default function Home() {
+  const { authUser, isLoading } = useAuth();
+  const router = useRouter();
   const [login, setLogin] = useState(false);
 
-  return (
+  // Redirect if finished loading and there's an existing user logged in
+  useEffect(() => {
+    if (!isLoading && authUser) {
+      router.push('/dashboard');
+    }
+  }, [authUser, isLoading])
+
+  return ((isLoading || (!isLoading && !!authUser)) ?
+  <CircularProgress color="inherit" sx={{ marginLeft: '50%', marginTop: '25%' }}/>
+  :
     <div>
       <Head>
         <title>Expense Tracker</title>
