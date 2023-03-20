@@ -15,6 +15,18 @@
  * limitations under the License.
  */
 
-import { format } from 'date-fns';
-import { deleteObject, getDownloadURL as getStorageDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { storage } from './firebase';
+import { uploadBytes } from "firebase/storage";
+
+// import { format } from 'date-fns';
+// import { deleteObject, getDownloadURL as getStorageDownloadURL, ref, uploadBytes } from 'firebase/storage';
+// import { storage } from './firebase';
+
+const BUCKET_URL = "gs://expense-track-2137.appspot.com";
+
+export async function uploadImage(image, uid) {
+    const formattedDate = format(new Date(), "yyyy-MMM-dd'T'HH:mm:ss'Z'");
+    const bucket = `${BUCKET_URL}/${uid}/${formattedDate}.jpg`;
+    const storageRef = ref(storage, bucket);
+    await uploadBytes(storageRef, image);
+    return bucket;
+}
