@@ -21,11 +21,11 @@
  import { Alert, Button, CircularProgress, Container, Dialog, DialogContent, DialogActions, Divider, IconButton, Snackbar, Stack, Typography } from '@mui/material';
  import AddIcon from '@mui/icons-material/Add';
  import NavBar from '../components/navbar';
-//  import ReceiptRow from '../components/receiptRow';
+ import ReceiptRow from '../components/receiptRow';
  import ExpenseDialog from '../components/expenseDialog';
  import { useAuth } from '../firebase/auth';
-//  import { deleteReceipt, getReceipts } from '../firebase/firestore';
-//  import { deleteImage } from '../firebase/storage';
+ import { deleteReceipt, getReceipts } from '../firebase/firestore';
+ import { deleteImage } from '../firebase/storage';
  import styles from '../styles/dashboard.module.scss';
 
 const ADD_SUCCESS = "Receipt was successfully added!";
