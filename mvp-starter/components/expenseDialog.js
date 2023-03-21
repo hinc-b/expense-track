@@ -65,8 +65,8 @@ export default function ExpenseDialog(props) {
   }, [props.edit, props.showDialog])
 
   // Check whether any of the form fields are unedited
-  const isDisabled = () => formFields.fileName === DEFAULT_FILE_NAME || !formFields.date || formFields.locationName.length === 0 
-                     || formFields.address.length === 0 || formFields.items.length === 0 || formFields.amount.length === 0;
+  // const isDisabled = () => formFields.fileName === DEFAULT_FILE_NAME || !formFields.date || formFields.locationName.length === 0 
+                    //  || formFields.address.length === 0 || formFields.items.length === 0 || formFields.amount.length === 0;
 
   // Update given field in the form
   const updateFormField = (event, field) => {
@@ -154,10 +154,13 @@ export default function ExpenseDialog(props) {
           <Button color="secondary" variant="contained" disabled={true}>
             Submitting...
           </Button> :
-          <Button color="secondary" variant="contained" onClick={handleSubmit} disabled={isDisabled()}>
+          <Button color="secondary" variant="contained" onClick={handleSubmit} >
             Submit
           </Button>}
       </DialogActions>
     </Dialog>
   )
 }
+
+// add disabled={isDisabled()} after onClick={handleSubmit} if
+// you want to disable adding a receipt without description
