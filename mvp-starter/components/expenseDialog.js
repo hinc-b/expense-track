@@ -30,13 +30,15 @@ const DEFAULT_FILE_NAME = "No file selected";
 
 // Default form state for the dialog
 const DEFAULT_FORM_STATE = {
+  address: "",
+  amount: "",
+  date: null,
   fileName: DEFAULT_FILE_NAME,
   file: null,
-  date: null,
-  locationName: "",
-  address: "",
+  imageBucket: "",
+  imageUrl: "",
   items: "",
-  amount: "",
+  locationName: "",
 };
 
 /* 
@@ -50,8 +52,8 @@ const DEFAULT_FORM_STATE = {
   - onCloseDialog emits to close dialog
  */
 export default function ExpenseDialog(props) {
-  const { authUser } = useAuth();
   const isEdit = Object.keys(props.edit).length > 0;
+  const { authUser } = useAuth();
   const [formFields, setFormFields] = useState(isEdit ? props.edit : DEFAULT_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -83,22 +85,38 @@ export default function ExpenseDialog(props) {
     props.onCloseDialog();
   }
 
+  // Store receipt information to Storage and Firestore
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
     try {
-      await uploadImage(formFields.file, authUser.uid);
-      props.onSuccess(RECEIPTS_ENUM.add);
+      if (isEdit) {
+        // Check whether image was changed - fileName will be not null
+        if (formFields.fileName) {
+          // Store image into Storage
+          await replaceImage(formFields.file, formFields.imageBucket);
+        }
+        await updateReceipt(formFields.id, authUser.uid, formFields.date, formFields.locationName, formFields.address, formFields.items, formFields.amount, formFields.imageBucket);
+      } else {
+        // Adding receipt
+        // Store image into Storage
+        const bucket = await uploadImage(formFields.file, authUser.uid);
+
+        // Store data into Firestore
+        await addReceipt(authUser.uid, formFields.date, formFields.locationName, formFields.address, formFields.items, formFields.amount, bucket);
+      }
+      props.onSuccess(isEdit ? RECEIPTS_ENUM.edit : RECEIPTS_ENUM.add);
     } catch (error) {
-      props.onError(RECEIPTS_ENUM.add);
+      props.onError(isEdit ? RECEIPTS_ENUM.edit : RECEIPTS_ENUM.add);
     }
 
+    // Clear all form data
     closeDialog();
-  }
+  };
 
   return (
     <Dialog classes={{paper: styles.dialog}}
-      onClose={() => closeDialog()}
+      onClose={closeDialog}
       open={props.showDialog}
       component="form">
       <Typography variant="h4" className={styles.title}>
@@ -106,7 +124,7 @@ export default function ExpenseDialog(props) {
       </Typography>
       <DialogContent className={styles.fields}>
         <Stack direction="row" spacing={2} className={styles.receiptImage}>
-          {(isEdit && !formFields.fileName) && <Avatar alt="receipt image" src={formFields.imageUrl} sx={{ marginRight: '1em' }}/> }
+          {(isEdit && !formFields.fileName) && <Avatar alt="receipt image" src={formFields.imageUrl}/> }
           <Button variant="outlined" component="label" color="secondary">
             Upload Receipt
             <input type="file" hidden onInput={(event) => {setFileData(event.target)}} />
@@ -115,7 +133,7 @@ export default function ExpenseDialog(props) {
         </Stack>
         <Stack>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
+            <DatePicker
               label="Date"
               value={formFields.date}
               onChange={(newDate) => {
@@ -136,7 +154,7 @@ export default function ExpenseDialog(props) {
           <Button color="secondary" variant="contained" disabled={true}>
             Submitting...
           </Button> :
-          <Button color="secondary" variant="contained" disabled={isDisabled()} onClick={handleSubmit}>
+          <Button color="secondary" variant="contained" onClick={handleSubmit} disabled={isDisabled()}>
             Submit
           </Button>}
       </DialogActions>
