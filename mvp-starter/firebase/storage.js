@@ -20,7 +20,7 @@ import { deleteObject, getDownloadURL as getStorageDownloadURL, ref, uploadBytes
 import { storage } from './firebase';
  
 // Bucket URL from Storage in Firebase Console
-const BUCKET_URL = "";
+const BUCKET_URL = "gs://expense-track-2137.appspot.com";
  
 // Uploads image and returns the storage bucket
 export async function uploadImage(image, uid) {
@@ -29,6 +29,11 @@ export async function uploadImage(image, uid) {
   await uploadBytes(ref(storage, bucket), image);
   return bucket;
 }
+
+// Gets the download URL from the reference URL
+export async function getDownloadURL(bucket) {
+    return await getStorageDownloadURL(ref(storage, bucket));
+  }
 
 // Replaces existing image in storage and returns the storage bucket
 export function replaceImage(image, bucket) {
@@ -40,7 +45,4 @@ export function deleteImage(bucket) {
   deleteObject(ref(storage, bucket));
 }
 
-// Gets the download URL from the reference URL
-export async function getDownloadURL(bucket) {
-  return await getStorageDownloadURL(ref(storage, bucket));
-}
+

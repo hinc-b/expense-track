@@ -64,12 +64,15 @@ export default function Dashboard() {
   const [isLoadingReceipts, setIsLoadingReceipts] = useState(true);
   const [deleteReceiptId, setDeleteReceiptId] = useState("");
   const [deleteReceiptImageBucket, setDeleteReceiptImageBucket] = useState("");
+  const [receipts, setReceipts] = useState([])
   const [updateReceipt, setUpdateReceipt] = useState({});
 
   // State involved in snackbar
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [showSuccessSnackbar, setSuccessSnackbar] = useState(false);
   const [showErrorSnackbar, setErrorSnackbar] = useState(false);
+
+
 
   // Sets appropriate snackbar message on whether @isSuccess and updates shown receipts if necessary
   const onResult = async (receiptEnum, isSuccess) => {
@@ -84,6 +87,14 @@ export default function Dashboard() {
       router.push('/');
     }
   }, [authUser, isLoading]);
+
+
+  // Get receipt once user is logged in
+  useEffect(async () =>  {
+    if (authUser) {
+      setReceipts(await getReceipts(authUser.uid));
+    }
+  }, [authUser]);
 
   // For all of the onClick functions, update the action and fields for updating
 
@@ -134,6 +145,15 @@ export default function Dashboard() {
             <AddIcon />
           </IconButton>
         </Stack>
+        { receipts.map((receipt) => (
+          <div key={receipt.id}>
+            <Divider light />
+            <ReceiptRow receipt={receipt}
+                        onEdit={() => onUpdate(receipt)}
+                        onDelete={() => onClickDelete(receipt.id, receipt.imageBucket)} />
+          </div>)
+        )}
+
       </Container>
       <ExpenseDialog edit={updateReceipt}
                      showDialog={action === RECEIPTS_ENUM.add || action === RECEIPTS_ENUM.edit}
