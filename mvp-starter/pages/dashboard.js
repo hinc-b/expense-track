@@ -145,7 +145,7 @@ export default function Dashboard() {
             <AddIcon />
           </IconButton>
         </Stack>
-        { receipts.map((receipt) => (
+        { receipts?.map((receipt) => (
           <div key={receipt.id}>
             <Divider light />
             <ReceiptRow receipt={receipt}
