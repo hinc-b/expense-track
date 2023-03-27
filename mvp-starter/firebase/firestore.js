@@ -49,6 +49,12 @@ export async function getReceipts(uid, setReceipts, setIsLoadingReceipts) {
     return unsubscribe;
 }
 
+// Editing Receipts
 export function updateReceipt(docId, uid, date, locationName, address, items, amount, imageBucket) {
     setDoc(doc(db, RECEIPTS_COLLECTION, docId), { uid, date, locationName, address, items, amount, imageBucket });
 };
+
+// Deleting Receipts
+export function deleteReceipt(id) {
+    deleteDoc(doc(db, RECEIPTS_COLLECTION, id));
+}

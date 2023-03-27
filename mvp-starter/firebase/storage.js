@@ -42,7 +42,7 @@ export async function replaceImage(image, bucket) {
 
 // Deletes existing image in storage
 export function deleteImage(bucket) {
-  deleteObject(ref(storage, bucket));
+  deleteObject(ref(storage, bucket)); 
 }
 
 
