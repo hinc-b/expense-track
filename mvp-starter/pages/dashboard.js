@@ -79,6 +79,7 @@ export default function Dashboard() {
     setSnackbarMessage(isSuccess ? SUCCESS_MAP[receiptEnum] : ERROR_MAP[receiptEnum]);
     isSuccess ? setSuccessSnackbar(true) : setErrorSnackbar(true);
     setAction(RECEIPTS_ENUM.none);
+
   }
 
   // Listen to changes for loading and authUser, redirect if needed
@@ -92,12 +93,12 @@ export default function Dashboard() {
   // Get receipt once user is logged in
   useEffect(async () =>  {
     if (authUser) {
-      setReceipts(await getReceipts(authUser.uid));
+      const unsubscribe = await getReceipts(authUser.uid, setReceipts, setIsLoadingReceipts);
+      return () => unsubscribe();
     }
   }, [authUser]);
 
   // For all of the onClick functions, update the action and fields for updating
-
   const onClickAdd = () => {
     setAction(RECEIPTS_ENUM.add);
     setUpdateReceipt({});

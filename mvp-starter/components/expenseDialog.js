@@ -97,6 +97,7 @@ export default function ExpenseDialog(props) {
           await replaceImage(formFields.file, formFields.imageBucket);
         }
         await updateReceipt(formFields.id, authUser.uid, formFields.date, formFields.locationName, formFields.address, formFields.items, formFields.amount, formFields.imageBucket);
+      
       } else {
         // Adding receipt
         // Store image into Storage
@@ -105,6 +106,8 @@ export default function ExpenseDialog(props) {
         // Store data into Firestore
         await addReceipt(authUser.uid, formFields.date, formFields.locationName, formFields.address, formFields.items, formFields.amount, bucket);
       }
+
+      // Snackbar implementation
       props.onSuccess(isEdit ? RECEIPTS_ENUM.edit : RECEIPTS_ENUM.add);
     } catch (error) {
       props.onError(isEdit ? RECEIPTS_ENUM.edit : RECEIPTS_ENUM.add);

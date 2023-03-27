@@ -36,8 +36,8 @@ export async function getDownloadURL(bucket) {
   }
 
 // Replaces existing image in storage and returns the storage bucket
-export function replaceImage(image, bucket) {
-  uploadBytes(ref(storage, bucket), image);
+export async function replaceImage(image, bucket) {
+  await uploadBytes(ref(storage, bucket), image);
 }
 
 // Deletes existing image in storage
